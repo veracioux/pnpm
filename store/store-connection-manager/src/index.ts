@@ -64,7 +64,11 @@ export async function createOrConnectStoreController (
       prefix: opts.dir,
     })
     return {
-      ctrl: await connectStoreController(serverJson.connectionOptions),
+      // FIXME: This is a very lazy patch, but it works for me
+      ctrl: {
+        ...await connectStoreController(serverJson.connectionOptions),
+        importPackage: (await createNewStoreController({ ...opts, storeDir })).ctrl.importPackage,
+      },
       dir: storeDir,
     }
   }
